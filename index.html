@@ -139,7 +139,7 @@ body{background:#f3f7f4;color:var(--ink)}
   <section class="summary">
    <div class="stat"><label>Total do ano</label><strong id="homeYearTotal">R$ 0,00</strong></div>
    <div class="stat paid"><label>Total pago</label><strong id="homeYearPaid">R$ 0,00</strong></div>
-   <div class="stat open"><label>Em aberto</label><strong id="homeYearOpen">R$ 0,00</strong></div>
+   <div class="stat open"><label>Em aberto no mês</label><strong id="homeYearOpen">R$ 0,00</strong></div>
    <div class="stat late"><label>Vencidas</label><strong id="homeYearLate">R$ 0,00</strong></div>
   </section>
  </section>
@@ -161,7 +161,7 @@ body{background:#f3f7f4;color:var(--ink)}
  <section class="summary">
   <div class="stat"><label>Total do ano</label><strong id="yearTotal">R$ 0,00</strong></div>
   <div class="stat paid"><label>Total pago</label><strong id="yearPaid">R$ 0,00</strong></div>
-  <div class="stat open"><label>Em aberto</label><strong id="yearOpen">R$ 0,00</strong></div>
+  <div class="stat open"><label>Em aberto no mês</label><strong id="yearOpen">R$ 0,00</strong></div>
   <div class="stat late"><label>Vencidas</label><strong id="yearLate">R$ 0,00</strong></div>
  </section>
  <div class="installbox" style="background:#f2f6fc">
@@ -243,9 +243,12 @@ function render(){
  ensureRecurringYear(selectedYear);
  $('yearLabel').textContent=selectedYear;
  $('homeYearLabel').textContent=selectedYear;
- const yr=inYear(),yt=totals(yr);$('yearTotal').textContent=money(yt.all);$('yearPaid').textContent=money(yt.paid);$('yearLate').textContent=money(yt.late);$('yearOpen').textContent=money(yt.all-yt.paid-yt.late);
+ const yr=inYear(),yt=totals(yr);
+ const monthRows=bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===selectedMonth),mt=totals(monthRows);
+ const monthOpen=mt.all-mt.paid-mt.late;
+ $('yearTotal').textContent=money(yt.all);$('yearPaid').textContent=money(yt.paid);$('yearLate').textContent=money(yt.late);$('yearOpen').textContent=money(monthOpen);
  $('homeYearTotal').textContent=money(yt.all);$('homeYearPaid').textContent=money(yt.paid);
- $('homeYearLate').textContent=money(yt.late);$('homeYearOpen').textContent=money(yt.all-yt.paid-yt.late);
+ $('homeYearLate').textContent=money(yt.late);$('homeYearOpen').textContent=money(monthOpen);
  if($('yearChart'))drawYearChart();
  const grid=$('monthGrid');grid.innerHTML='';
  monthNames.forEach((name,i)=>{const rows=bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===i),t=totals(rows),btn=document.createElement('button');btn.className='month'+(i===selectedMonth?' active':'');btn.onclick=()=>{selectedMonth=i;render()};

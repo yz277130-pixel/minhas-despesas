@@ -1,19 +1,13 @@
-MINHAS DESPESAS - VERSÃO VERDE MODERNA
+MINHAS DESPESAS — AJUSTE DO TOTAL EM ABERTO
 
-Atualizações:
-- Identidade visual verde escuro com fundo claro.
-- Página inicial focada nos 12 meses e nas contas do mês selecionado.
-- Visão anual separada, acessível pela aba Visão anual no menu.
-- Menu funcional com abas Visão anual e Importar e Backup.
-- Importação/restauração JSON, backup completo JSON e exportação CSV.
-- Contas vencidas em vermelho, pagas em verde e em aberto em azul claro.
-- Dados continuam armazenados localmente no aparelho.
+Nesta versão, os cartões “Em aberto no mês” mostram somente o valor em aberto do mês selecionado no calendário.
+Os totais anuais e os demais indicadores permanecem com o comportamento anterior.
 
-Como usar:
-1. Extraia a pasta minhas_despesas_atualizado.
-2. Publique os arquivos em um servidor HTTPS ou abra em um ambiente local que suporte service worker.
-3. Para instalar como aplicativo, abra o site no navegador e use "Adicionar à tela inicial".
-4. Faça backups JSON regularmente e guarde uma cópia fora do aparelho.
+Como atualizar no GitHub:
+1. Faça backup dos seus dados pelo Menu > Importar e Backup antes de atualizar.
+2. Extraia este ZIP.
+3. Envie os arquivos e pastas que estão dentro de minhas_despesas_atualizado para a raiz do repositório GitHub, substituindo os arquivos existentes.
+4. Não apague nem altere os dados salvos no navegador. A atualização do site não deve apagar o localStorage.
+5. Recarregue o aplicativo. Se continuar aparecendo a versão antiga, feche e abra novamente ou limpe os dados em cache do site (não os dados do aplicativo).
 
-Observação:
-O backup local baixa um arquivo JSON para o dispositivo. O envio ao Google Drive exige configurar um Client ID OAuth próprio no Google Cloud.
+Seus lançamentos existentes permanecem no armazenamento local do navegador deste aparelho.
