@@ -1,0 +1,17 @@
+MINHAS DESPESAS — ATUALIZAÇÃO
+
+O que mudou:
+- O cartão “Em aberto” mostra apenas o saldo em aberto do mês selecionado, nos dois painéis.
+- Ao abrir, o app começa no mês atual. Na virada do mês, muda automaticamente para o novo mês, mesmo se continuar aberto.
+- Removida a conexão e toda a configuração do Google Drive.
+- Backup e restauração ficam no próprio aparelho por arquivo JSON; também há exportação CSV.
+- Os lançamentos continuam salvos no armazenamento local do navegador. O ícone não foi alterado.
+
+Atualização:
+1. Faça um backup JSON antes de atualizar.
+2. Extraia este ZIP.
+3. Envie o conteúdo desta pasta para a raiz do repositório GitHub, substituindo os arquivos antigos, incluindo index.html, sw.js, manifest.webmanifest, icon.svg e a pasta icons.
+4. Faça Commit changes e aguarde o GitHub Pages publicar.
+5. Reabra o app. Se necessário, feche e abra novamente para atualizar o cache.
+
+ATENÇÃO: Não limpe os dados/armazenamento do site. O backup JSON é uma cópia local para guardar; não sincroniza automaticamente entre aparelhos.

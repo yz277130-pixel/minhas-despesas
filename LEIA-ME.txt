@@ -1,0 +1,19 @@
+MINHAS DESPESAS - VERSÃO VERDE MODERNA
+
+Atualizações:
+- Identidade visual verde escuro com fundo claro.
+- Página inicial focada nos 12 meses e nas contas do mês selecionado.
+- Visão anual separada, acessível pela aba Visão anual no menu.
+- Menu funcional com abas Visão anual e Importar e Backup.
+- Importação/restauração JSON, backup completo JSON e exportação CSV.
+- Contas vencidas em vermelho, pagas em verde e em aberto em azul claro.
+- Dados continuam armazenados localmente no aparelho.
+
+Como usar:
+1. Extraia a pasta minhas_despesas_atualizado.
+2. Publique os arquivos em um servidor HTTPS ou abra em um ambiente local que suporte service worker.
+3. Para instalar como aplicativo, abra o site no navegador e use "Adicionar à tela inicial".
+4. Faça backups JSON regularmente e guarde uma cópia fora do aparelho.
+
+Observação:
+O backup local baixa um arquivo JSON para o dispositivo. O envio ao Google Drive exige configurar um Client ID OAuth próprio no Google Cloud.

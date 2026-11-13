@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102a23"><meta name="description" content="Organize suas contas, parcelas e pagamentos mês a mês.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Minhas Despesas</title>
+<style>
+:root{--forest:#10264a;--forest2:#183b68;--mint:#dcecff;--green:#168653;--gold:#c6a66a;--ink:#17283d;--muted:#718096;--bg:#ffffff;--white:#fff;--line:#dce5f0;--red:#c93434;--redbg:#fff0ef;--blue:#dceeff;--blueedge:#65a9ed;--shadow:0 12px 32px rgba(0,0,0,.16)}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:1040px;margin:auto;padding:22px 17px 48px}
+.top{background:linear-gradient(125deg,#08172d,#173d70);color:#fff;border-radius:24px;padding:20px 21px;margin-bottom:20px;box-shadow:0 15px 35px #102a2326;position:relative;overflow:hidden}
+.top:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #ffffff18;border-radius:50%;right:-55px;top:-95px;box-shadow:0 0 0 24px #ffffff08,0 0 0 48px #ffffff06}
+.brandrow{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative;z-index:1}.brand{display:flex;gap:12px;align-items:center}.logo{height:45px;width:45px;border-radius:15px;background:#ffffff17;border:1px solid #ffffff20;display:grid;place-items:center;color:#d6bd8a;font-size:22px;font-weight:800}
+h1{font-size:21px;margin:0;letter-spacing:-.5px}.tagline{font-size:11px;color:#c8d8d0;margin-top:4px;letter-spacing:.3px}.backup{border:1px solid #ffffff38;background:#ffffff12;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:650}
+.topnote{margin-top:22px;position:relative;z-index:1;color:#d5e4dc;font-size:12px}.yearline{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 12px}.yearline h2{font-size:18px;margin:0;text-transform:capitalize}.yearcontrols{display:flex;align-items:center;gap:8px}.yearcontrols strong{font-size:18px;min-width:52px;text-align:center}.iconbtn{height:35px;width:35px;border:1px solid var(--line);background:#fff;border-radius:11px;color:var(--forest);font-size:19px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px 15px;box-shadow:var(--shadow);min-width:0}.stat label{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}.stat strong{font-size:clamp(16px,2.6vw,22px);letter-spacing:-.6px;white-space:nowrap}.stat.paid strong{color:var(--green)}.stat.late strong{color:var(--red)}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 2px 12px}.sectionhead h3{font-size:15px;margin:0;color:inherit}.sectionhead p{font-size:11px;color:var(--muted);margin:4px 0 0}.add{background:var(--forest);color:#fff;border:0;border-radius:12px;padding:11px 14px;font-weight:700;font-size:12px;box-shadow:0 6px 16px #102a2322}
+.monthgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.month{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px 12px;text-align:left;min-height:90px;box-shadow:var(--shadow);transition:.18s;position:relative;color:var(--ink)}.month:hover{transform:translateY(-2px)}.month.active{border:1.5px solid var(--green);background:#eff9f3;box-shadow:0 0 0 3px #16865312}.monthname{font-size:12px;font-weight:750;text-transform:capitalize}.monthvalue{font-size:14px;font-weight:800;margin-top:8px;letter-spacing:-.3px}.monthmeta{font-size:10px;color:var(--muted);margin-top:4px}.monthdot{position:absolute;right:12px;top:14px;width:7px;height:7px;border-radius:50%;background:#c5d0c9}.monthdot.has{background:var(--green)}.monthdot.late{background:var(--red)}
+.details{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:var(--shadow)}.detailtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.detailtop h3{font-size:16px;margin:0;text-transform:capitalize}.detailtop span{font-size:11px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 13px 2px;color:var(--muted);font-size:10px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}.dot.red{background:var(--red)}.dot.green{background:var(--green)}.dot.white{background:#78b9f2;border:1px solid #78b9f2}
+.list{display:grid;gap:9px}.bill{background:var(--blue);border:1px solid #b9d9f7;border-left:4px solid var(--blueedge);border-radius:13px;padding:12px;display:flex;align-items:center;gap:10px}.bill.overdue{border-left-color:var(--red);background:var(--redbg)}.bill.paid{border-left-color:var(--green);background:#e7f8ee}
+.billmain{min-width:0;flex:1}.billtitle{color:#173454;font-size:13px;font-weight:750;overflow-wrap:anywhere}.billmeta{font-size:10px;color:#52677e;margin-top:4px}.billamount{color:#173454;font-size:15px;font-weight:800;margin-top:5px}.actions{display:flex;align-items:center;gap:5px}.pay{height:38px;min-width:40px;border:0;border-radius:11px;background:#edf1ee;color:#43544b;font-size:19px}.paid .pay{background:var(--green);color:white}.tiny{border:0;background:transparent;color:var(--muted);font-size:10px;padding:6px}
+.empty{padding:27px 15px;text-align:center;color:var(--muted);border:1px dashed #cad6ce;border-radius:13px;font-size:12px}.empty b{display:block;color:var(--ink);font-size:13px;margin-bottom:5px}
+.footer{text-align:center;color:#b8c8df;font-size:10px;margin-top:22px}
+.overlay{position:fixed;inset:0;background:#081b15aa;display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:10}.overlay.show{display:flex}.modal{width:min(100%,510px);max-height:92vh;overflow:auto;background:#fff;border-radius:23px;padding:20px;box-shadow:0 20px 70px #0004}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px}.modal h2{font-size:18px;margin:0}.close{border:0;background:#f0f4f1;border-radius:10px;width:34px;height:34px;font-size:20px;color:var(--ink)}
+form{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:11px;font-weight:750;color:#58665e}.field input,.field select{width:100%;border:1px solid #dce5df;border-radius:11px;padding:12px;background:#fff;color:var(--ink);outline:none;font-size:13px}.field input:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px #16865318}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.installbox{background:#f4f7f5;padding:12px;border-radius:13px;display:grid;gap:7px}.hint{font-size:10px;color:var(--muted);line-height:1.45}.formactions{display:flex;gap:8px;margin-top:4px}.formactions button{flex:1;padding:12px;border-radius:11px;font-weight:700}.secondary{background:#eff3f0;color:#34443b;border:0}
+@media(max-width:620px){.summary{grid-template-columns:repeat(2,1fr)}.monthgrid{grid-template-columns:repeat(3,1fr)}.app{padding:14px 12px 35px}.top{padding:18px;border-radius:20px}.month{min-height:82px;padding:11px 9px}.monthvalue{font-size:12px}.monthmeta{font-size:9px}.details{padding:13px}.tiny{font-size:9px;padding:5px}}
+@media(min-width:700px){.overlay{align-items:center}}
+
+/* Visual refinado: moderno, leve e consistente */
+:root{
+ --forest:#102f26;--forest2:#1b4b3d;--mint:#e9f4ef;--ink:#1b2924;
+ --muted:#718096;--bg:#ffffff;--line:#e5ebf2;--shadow:0 8px 26px rgba(23,59,104,.075);
+ --blue:#e5f2ff;--blueedge:#78b8f2;--red:#c93434;--redbg:#fff0ef;--green:#168653;
+}
+body{background:#fff;color:var(--ink);letter-spacing:.05px}
+.app{max-width:1080px;padding:24px 20px 54px}
+.top{background:linear-gradient(125deg,#102f26 0%,#174638 58%,#245b4b 100%);border-radius:25px;padding:23px 24px;margin-bottom:24px;box-shadow:0 14px 34px rgba(20,54,91,.18)}
+.logo{height:48px;width:48px;border-radius:16px;background:#ffffff20;border-color:#ffffff30;color:#fff}
+h1{font-size:22px;font-weight:800;letter-spacing:-.7px}
+.tagline{color:#dcecff;font-size:11px}
+.backup{border:1px solid #ffffff55;background:#ffffff18;border-radius:13px;padding:11px 14px;transition:.2s}
+.backup:hover{background:#ffffff2b;transform:translateY(-1px)}
+.topnote{color:#e2efff}
+.sectionhead{margin:26px 2px 14px}
+.sectionhead h3,.detailtop h3{font-weight:800;letter-spacing:-.25px}
+.stat{border-radius:18px;padding:16px;border-color:#e8edf3;box-shadow:0 5px 18px rgba(23,59,104,.055);transition:transform .18s,box-shadow .18s}
+.stat:hover,.month:hover{box-shadow:0 10px 25px rgba(23,59,104,.10)}
+.stat label{font-size:11px;font-weight:650;letter-spacing:.15px}
+.stat strong{font-weight:800}
+.add{background:linear-gradient(135deg,#102f26,#1e5947);border-radius:13px;padding:12px 16px;box-shadow:0 7px 16px rgba(23,59,104,.17);transition:transform .18s,filter .18s}
+.add:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.monthgrid{gap:12px}
+.month{border-radius:17px;padding:14px;min-height:94px;box-shadow:0 4px 14px rgba(23,59,104,.045);border-color:#e8edf3}
+.month.active{border:1.5px solid #39865f;background:#eff9f3;box-shadow:0 0 0 3px #16865312}
+.monthname{font-size:12px;color:#344b65}
+.monthvalue{font-size:15px;color:#182b43}
+.details{border-radius:22px;padding:19px;border-color:#e8edf3;box-shadow:0 7px 24px rgba(23,59,104,.06)}
+.detailtop{margin-bottom:15px}
+.bill{border-radius:15px;padding:13px 14px;gap:12px;transition:transform .16s,box-shadow .16s}
+.bill:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(23,59,104,.08)}
+.billtitle{font-size:13px;font-weight:800}
+.billamount{font-size:15px;font-weight:850}
+.pay{border-radius:12px;transition:filter .15s,transform .15s}
+.pay:hover{filter:brightness(.96);transform:scale(1.03)}
+.empty{border-color:#d8e2ed;background:#fbfdff;border-radius:15px;padding:32px 16px}
+.footer{color:#8998aa}
+.overlay{background:rgba(9,25,45,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.modal{border:1px solid #edf1f6;border-radius:25px;padding:22px;box-shadow:0 24px 80px rgba(7,22,41,.25)}
+.modalhead{margin-bottom:20px}
+.modal h2{font-size:19px;font-weight:800;letter-spacing:-.4px;color:#1b3049}
+.close{background:#f1f5f9;border-radius:12px}
+.field label{color:#40556e;font-weight:750}
+.field input,.field select{border-color:#dce5ef;border-radius:12px;padding:13px}
+.field input:focus,.field select:focus{border-color:#5b9bd5;box-shadow:0 0 0 3px #5b9bd51c}
+.installbox{background:#f5f8fc;border:1px solid #e8eef5;border-radius:15px;padding:14px}
+.hint{color:#718096;font-size:11px}
+.secondary{background:#edf2f8;color:#29435f;border-radius:11px}
+.iconbtn{border-radius:12px;background:#f7faff;border-color:#e2eaf3}
+.legend{font-weight:600}
+@media(max-width:620px){
+ .app{padding:14px 12px 38px}
+ .top{padding:19px;border-radius:21px;margin-bottom:19px}
+ .summary{gap:9px}
+ .stat{padding:13px;border-radius:15px}
+ .monthgrid{gap:9px}
+ .month{border-radius:14px}
+ .details{padding:14px;border-radius:18px}
+ .bill{padding:12px;border-radius:13px}
+ .modal{padding:18px;border-radius:22px}
+}
+
+
+:root{--forest:#102f26;--forest2:#1b4b3d;--green:#168653;--blue:#e8f4ff;--blueedge:#83bce9;--ink:#1b2924;--muted:#78877f;--line:#e1e9e4;--red:#d44848;--redbg:#fff0ef}
+body{background:#f3f7f4;color:var(--ink)}
+.top{background:linear-gradient(125deg,#102f26 0%,#174638 58%,#245b4b 100%)}
+.add{background:linear-gradient(135deg,#102f26,#1e5947)}
+.stat.open strong{color:#62a9df}
+.bill:not(.paid):not(.overdue) .billtitle,.bill:not(.paid):not(.overdue) .billamount{color:#245a83}
+.menutabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px}
+.menutab{border:1px solid #dfe9e3;background:#f5f8f6;color:#40564b;border-radius:12px;padding:11px 8px;font-size:12px;font-weight:750}
+.menutab.active{background:#e8f5ed;border-color:#168653;color:#11633f;box-shadow:0 0 0 2px #16865312}
+[hidden]{display:none!important}
+@media(max-width:620px){.summary{grid-template-columns:repeat(2,1fr)}}
+
+
+/* Visão anual na página inicial */
+.home-year{margin:20px 2px 22px}
+.home-year .yearline{margin:0 2px 12px}
+.home-year .yearline h2{font-size:20px;font-weight:800;color:var(--ink)}
+.home-year .summary{margin-bottom:0}
+.home-year .stat{min-height:94px;display:flex;flex-direction:column;justify-content:center}
+.home-year .stat.open strong{color:#1b2924}
+#homeYearPaid{color:#168653}
+#homeYearLate{color:#d44848}
+.backup{white-space:nowrap}
+.menutab{cursor:pointer}
+@media(max-width:620px){
+ .home-year{margin:17px 2px 20px}
+ .home-year .yearline h2{font-size:19px}
+ .home-year .stat{min-height:88px;padding:13px}
+ .home-year .stat label{font-size:12px}
+ .home-year .stat strong{font-size:18px}
+ .monthgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+</style>
+
+</head>
+<body>
+<main class="app">
+ <header class="top">
+  <div class="brandrow"><div class="brand"><div class="logo">✦</div><div><h1>Minhas Despesas</h1><div class="tagline">SEU CALENDÁRIO FINANCEIRO</div></div></div><button class="backup" id="menuBtn">☰ Menu</button></div>
+  <div class="topnote">Organize suas contas, acompanhe suas parcelas e tenha o controle de cada mês.</div>
+ </header>
+ <section class="home-year" aria-label="Visão do ano">
+  <div class="yearline"><h2>Visão do ano</h2><div class="yearcontrols"><button class="iconbtn" id="homePrevYear" aria-label="Ano anterior">‹</button><strong id="homeYearLabel"></strong><button class="iconbtn" id="homeNextYear" aria-label="Próximo ano">›</button></div></div>
+  <section class="summary">
+   <div class="stat"><label>Total do ano</label><strong id="homeYearTotal">R$ 0,00</strong></div>
+   <div class="stat paid"><label>Total pago</label><strong id="homeYearPaid">R$ 0,00</strong></div>
+   <div class="stat open"><label id="homeOpenLabel">Em aberto no mês</label><strong id="homeYearOpen">R$ 0,00</strong></div>
+   <div class="stat late"><label>Vencidas</label><strong id="homeYearLate">R$ 0,00</strong></div>
+  </section>
+ </section>
+ <div class="sectionhead"><div><h3>Seus 12 meses</h3><p>Toque em um mês para ver as contas e parcelas.</p></div><button class="add" id="addBtn">＋ Nova conta</button></div>
+ <section class="monthgrid" id="monthGrid"></section>
+ <section class="details">
+  <div class="detailtop"><h3 id="monthTitle">Janeiro</h3><span id="monthCount">0 contas</span></div>
+  <div class="legend"><span><i class="dot red"></i>Vencida</span><span><i class="dot green"></i>Paga</span><span><i class="dot white"></i>Em aberto</span></div>
+  <div class="list" id="billList"></div>
+ </section>
+ <div class="footer">Seus dados ficam salvos neste aparelho. Acesse o Menu para relatórios, importação e backup.</div>
+</main>
+
+<div class="overlay" id="menuOverlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+ <div class="modalhead"><h2 id="menuTitle">Menu</h2><button class="close" id="closeMenu">×</button></div>
+ <div class="menutabs"><button type="button" class="menutab active" id="tabYear">Visão anual</button><button type="button" class="menutab" id="tabData">Importar e Backup</button></div>
+ <div id="yearPanel">
+ <div class="yearline"><h2>Gastos no ano</h2><div class="yearcontrols"><button class="iconbtn" id="prevYear" aria-label="Ano anterior">‹</button><strong id="yearLabel"></strong><button class="iconbtn" id="nextYear" aria-label="Próximo ano">›</button></div></div>
+ <section class="summary">
+  <div class="stat"><label>Total do ano</label><strong id="yearTotal">R$ 0,00</strong></div>
+  <div class="stat paid"><label>Total pago</label><strong id="yearPaid">R$ 0,00</strong></div>
+  <div class="stat open"><label id="yearOpenLabel">Em aberto no mês</label><strong id="yearOpen">R$ 0,00</strong></div>
+  <div class="stat late"><label>Vencidas</label><strong id="yearLate">R$ 0,00</strong></div>
+ </section>
+ <div class="installbox" style="background:#f2f6fc">
+  <strong style="font-size:13px;color:#173454">Gráfico mensal de gastos</strong>
+  <div id="yearChart" style="display:grid;grid-template-columns:repeat(6,1fr);gap:9px;align-items:end;min-height:150px;padding:10px 2px"></div>
+  <div class="hint">Valores de despesas lançadas em cada mês do ano selecionado.</div>
+ </div>
+ </div>
+ <div id="dataPanel" hidden>
+ <div class="sectionhead"><h3>Dados e segurança</h3></div>
+ <div class="installbox" style="margin-top:12px">
+  <strong style="font-size:13px;color:#173454">Memória deste aparelho</strong>
+  <div class="hint">Suas contas e parcelas ficam salvas no armazenamento do navegador deste celular. Use o backup para baixar uma cópia no aparelho e restaurá-la quando precisar.</div>
+  <button type="button" class="add" id="openDataFromMenu">⇅ Backup e restauração neste aparelho</button>
+  <div class="hint">Não precisa conectar Google Drive. O backup é um arquivo que você guarda no celular.</div>
+ </div>
+ </div>
+ <div class="formactions"><button type="button" class="secondary" id="doneMenu">Fechar menu</button></div>
+</section></div>
+
+<div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+ <div class="modalhead"><h2 id="modalTitle">Adicionar despesa</h2><button class="close" id="closeModal">×</button></div>
+ <form id="billForm">
+  <div class="field"><label for="name">Nome da conta ou compra</label><input id="name" required maxlength="70" placeholder="Ex.: Geladeira, água, supermercado"></div>
+  <div class="two"><div class="field"><label for="amount">Valor total (R$)</label><input id="amount" type="number" min="0.01" step="0.01" required placeholder="0,00"></div><div class="field"><label for="dueDate">Primeiro vencimento</label><input id="dueDate" type="date" required></div></div>
+  <div class="field"><label for="category">Categoria</label><select id="category"><option>Casa</option><option>Alimentação</option><option>Contas básicas</option><option>Internet e telefone</option><option>Transporte</option><option>Saúde</option><option>Educação</option><option>Compras</option><option>Outros</option></select></div>
+  <div class="field"><label for="recurring">Tipo de lançamento</label><select id="recurring"><option value="no">Conta normal / compra</option><option value="yes">Conta fixa mensal (repete todo mês)</option></select><div class="hint">Use esta opção para internet, celular, aluguel e outras contas que se repetem mensalmente.</div></div>
+  <div class="installbox"><div class="field"><label for="parts">Essa compra foi parcelada?</label><select id="parts"><option value="1">Não, pagamento único</option><option value="2">2 parcelas</option><option value="3">3 parcelas</option><option value="4">4 parcelas</option><option value="5">5 parcelas</option><option value="6">6 parcelas</option><option value="7">7 parcelas</option><option value="8">8 parcelas</option><option value="9">9 parcelas</option><option value="10">10 parcelas</option><option value="11">11 parcelas</option><option value="12">12 parcelas</option><option value="18">18 parcelas</option><option value="24">24 parcelas</option><option value="36">36 parcelas</option><option value="48">48 parcelas</option></select></div><div class="hint" id="installHint">Se parcelar, o valor total será dividido em parcelas mensais. Cada parcela entra automaticamente no mês certo e pode ser marcada como paga separadamente.</div></div>
+  <div class="formactions"><button type="button" class="secondary" id="cancelBtn">Cancelar</button><button type="submit" class="add" id="saveBtn">Salvar no calendário</button></div>
+ </form>
+</section></div>
+
+<div class="overlay" id="dataOverlay"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="dataTitle">
+ <div class="modalhead"><h2 id="dataTitle">Importação e Backup</h2><button class="close" id="closeData">×</button></div>
+ <div style="display:grid;gap:12px">
+  <div class="installbox">
+   <strong style="font-size:13px">Fazer backup completo</strong>
+   <div class="hint">Salva despesas, parcelas, contas fixas e configurações em um arquivo JSON que pode ser restaurado depois.</div>
+   <button type="button" class="add" id="makeBackup">↓ Baixar backup completo</button>
+  </div>
+  <div class="installbox">
+   <strong style="font-size:13px">Importar / restaurar backup</strong>
+   <div class="hint">Selecione um backup JSON criado pelo Minhas Despesas. Você poderá substituir os dados atuais ou juntar os registros sem duplicar IDs.</div>
+   <div class="field"><label for="backupFile">Arquivo de backup (.json)</label><input id="backupFile" type="file" accept=".json,application/json"></div>
+   <div class="field"><label for="importMode">Como deseja importar?</label><select id="importMode"><option value="merge">Mesclar com os dados atuais (recomendado)</option><option value="replace">Substituir todos os dados atuais</option></select></div>
+   <button type="button" class="add" id="restoreBackup">Importar backup</button>
+  </div>
+  <div class="installbox">
+   <strong style="font-size:13px">Exportar planilha</strong>
+   <div class="hint">Gera um arquivo CSV que pode ser aberto no Excel, Google Planilhas ou LibreOffice.</div>
+   <button type="button" class="secondary" id="exportCsv">Exportar despesas em CSV</button>
+  </div>
+  <div class="hint">Dica de segurança: mantenha uma cópia do backup fora do celular. Os dados continuam armazenados localmente neste aparelho; esta função não cria sincronização automática na nuvem.</div>
+  <div class="formactions"><button type="button" class="secondary" id="doneData">Fechar</button></div>
+ </div>
+</section></div>
+
+<script>
+const $=id=>document.getElementById(id),KEY='minhasDespesas.v2';
+let bills=load(),recurring=loadRecurring(),selectedYear=new Date().getFullYear(),selectedMonth=new Date().getMonth(),editingId=null;
+function loadRecurring(){try{return JSON.parse(localStorage.getItem(KEY+'.recurring')||'[]')}catch(e){return []}}
+function saveRecurring(){localStorage.setItem(KEY+'.recurring',JSON.stringify(recurring))}
+function ensureRecurringYear(year){let changed=false;recurring.forEach(r=>{const start=dateObj(r.start);for(let m=0;m<12;m++){const first=new Date(year,m,1);if(first<new Date(start.getFullYear(),start.getMonth(),1))continue;const day=Math.min(start.getDate(),new Date(year,m+1,0).getDate());const due=dateStr(new Date(year,m,day));const id='fixed-'+r.id+'-'+year+'-'+m;if(!bills.some(b=>b.id===id)){bills.push({id,groupId:r.id,recurringId:r.id,name:r.name,amount:r.amount,due,year,monthIndex:m,category:r.category,paid:false,part:1,partCount:1,fixed:true});changed=true}}});if(changed)save()} 
+const monthNames=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function save(){localStorage.setItem(KEY,JSON.stringify(bills))}
+function money(n){return Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function dateObj(s){return new Date(s+'T12:00:00')}
+function dateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmtDate(s){return dateObj(s).toLocaleDateString('pt-BR')}
+function status(b){if(b.paid)return'paid';const t=new Date();t.setHours(0,0,0,0);return dateObj(b.due)<t?'overdue':'open'}
+function inYear(){return bills.filter(b=>Number(b.year)===selectedYear)}
+function inMonth(){return bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===selectedMonth).sort((a,b)=>a.due.localeCompare(b.due)||a.name.localeCompare(b.name))}
+function totals(rows){return{all:rows.reduce((s,b)=>s+Number(b.amount),0),paid:rows.filter(b=>b.paid).reduce((s,b)=>s+Number(b.amount),0),late:rows.filter(b=>status(b)==='overdue').reduce((s,b)=>s+Number(b.amount),0)}}
+function render(){
+ ensureRecurringYear(selectedYear);
+ $('yearLabel').textContent=selectedYear;
+ $('homeYearLabel').textContent=selectedYear;
+ const yr=inYear(),yt=totals(yr);
+ const selectedRows=bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===selectedMonth);
+ const selectedTotals=totals(selectedRows);
+ const selectedOpen=Math.max(0,selectedTotals.all-selectedTotals.paid-selectedTotals.late);
+ const openLabel='Em aberto — '+monthNames[selectedMonth];
+ $('yearTotal').textContent=money(yt.all);$('yearPaid').textContent=money(yt.paid);$('yearLate').textContent=money(yt.late);$('yearOpen').textContent=money(selectedOpen);
+ $('homeYearTotal').textContent=money(yt.all);$('homeYearPaid').textContent=money(yt.paid);
+ $('homeYearLate').textContent=money(yt.late);$('homeYearOpen').textContent=money(selectedOpen);
+ $('yearOpenLabel').textContent=openLabel;$('homeOpenLabel').textContent=openLabel;
+ if($('yearChart'))drawYearChart();
+ const grid=$('monthGrid');grid.innerHTML='';
+ monthNames.forEach((name,i)=>{const rows=bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===i),t=totals(rows),btn=document.createElement('button');btn.className='month'+(i===selectedMonth?' active':'');btn.onclick=()=>{selectedMonth=i;render()};
+ const dot=document.createElement('i');dot.className='monthdot'+(rows.length?(t.late?' late':' has'):'');
+ const n=document.createElement('div');n.className='monthname';n.textContent=name;
+ const val=document.createElement('div');val.className='monthvalue';val.textContent=money(t.all);
+ const meta=document.createElement('div');meta.className='monthmeta';meta.textContent=rows.length+' '+(rows.length===1?'lançamento':'lançamentos');
+ btn.append(dot,n,val,meta);grid.append(btn)});
+ const rows=inMonth(),t=totals(rows);$('monthTitle').textContent=monthNames[selectedMonth]+' de '+selectedYear;$('monthCount').textContent=rows.length+' '+(rows.length===1?'lançamento':'lançamentos');
+ const list=$('billList');list.innerHTML='';
+ if(!rows.length){list.innerHTML='<div class="empty"><b>Nenhuma despesa neste mês</b>Adicione uma conta ou uma compra parcelada. Ela ficará registrada aqui e no calendário anual.</div>';return}
+ rows.forEach(b=>{const st=status(b),el=document.createElement('article');el.className='bill '+(st==='paid'?'paid':st==='overdue'?'overdue':'');
+ const main=document.createElement('div');main.className='billmain';const title=document.createElement('div');title.className='billtitle';title.textContent=b.name+(b.partCount>1?' · Parcela '+b.part+'/'+b.partCount:'')+(b.fixed?' · Fixa':'');
+ const meta=document.createElement('div');meta.className='billmeta';meta.textContent=b.category+' · Vencimento '+fmtDate(b.due)+(st==='paid'?' · Paga':st==='overdue'?' · Vencida':' · Em aberto');
+ const amount=document.createElement('div');amount.className='billamount';amount.textContent=money(b.amount);main.append(title,meta,amount);
+ const actions=document.createElement('div');actions.className='actions';const pay=document.createElement('button');pay.className='pay';pay.textContent=b.paid?'✓':'👍';pay.title=b.paid?'Marcar como não paga':'Marcar como paga';pay.onclick=()=>{b.paid=!b.paid;save();render()};
+ const edit=document.createElement('button');edit.className='tiny';edit.textContent='Editar';edit.onclick=()=>editBill(b.id);
+ const del=document.createElement('button');del.className='tiny';del.textContent='Excluir';del.onclick=()=>{if(b.fixed){if(confirm('Esta é uma conta fixa. Deseja excluir a conta recorrente e todos os lançamentos dela, inclusive os próximos meses?')){recurring=recurring.filter(r=>r.id!==b.recurringId);bills=bills.filter(x=>x.recurringId!==b.recurringId);saveRecurring();save();render()}}else if(confirm('Excluir este lançamento?')){bills=bills.filter(x=>x.id!==b.id);save();render()}};
+ actions.append(pay,edit,del);el.append(main,actions);list.append(el)});
+}
+function openModal(){editingId=null;$('billForm').reset();$('parts').disabled=false;$('modalTitle').textContent='Adicionar despesa';$('saveBtn').textContent='Salvar no calendário';$('dueDate').value=dateStr(new Date(selectedYear,selectedMonth,Math.min(new Date().getDate(),28)));$('overlay').classList.add('show')}
+function editBill(id){const b=bills.find(x=>x.id===id);if(!b)return;editingId=id;$('parts').disabled=false;$('modalTitle').textContent='Editar lançamento';$('saveBtn').textContent='Salvar alterações';$('name').value=b.name;$('amount').value=b.amount;$('dueDate').value=b.due;$('category').value=b.category;$('parts').value='1';$('recurring').value='no';$('overlay').classList.add('show')}
+function close(){ $('overlay').classList.remove('show') }
+$('recurring').onchange=()=>{const fixed=$('recurring').value==='yes';$('parts').disabled=fixed;$('installHint').textContent=fixed?'Esta conta será criada automaticamente em todos os meses, a partir do vencimento escolhido. Cada mês terá seu próprio pagamento independente.':'Se parcelar, o valor total será dividido em parcelas mensais. Cada parcela entra automaticamente no mês certo e pode ser marcada como paga separadamente.'};
+$('parts').onchange=()=>{$('installHint').textContent=Number($('parts').value)>1?'O total será dividido em '+$('parts').value+' parcelas mensais, a partir do vencimento escolhido. Cada mês terá seu próprio botão de pagamento.':'Se parcelar, o valor total será dividido em parcelas mensais. Cada parcela entra automaticamente no mês certo e pode ser marcada como paga separadamente.'};
+$('addBtn').onclick=openModal;$('closeModal').onclick=close;$('cancelBtn').onclick=close;$('overlay').onclick=e=>{if(e.target===$('overlay'))close()};
+$('prevYear').onclick=()=>{selectedYear--;render()};
+$('nextYear').onclick=()=>{selectedYear++;render()};
+$('homePrevYear').onclick=()=>{selectedYear--;render()};
+$('homeNextYear').onclick=()=>{selectedYear++;render()};
+$('billForm').onsubmit=e=>{e.preventDefault();const name=$('name').value.trim(),total=Number($('amount').value),due=$('dueDate').value,category=$('category').value,fixed=$('recurring').value==='yes',parts=fixed?1:Number($('parts').value);if(!name||!due||!(total>0))return;
+ if(editingId){const b=bills.find(x=>x.id===editingId);if(b){b.name=name;b.amount=total;b.due=due;b.year=Number(due.slice(0,4));b.monthIndex=Number(due.slice(5,7))-1;b.category=category}}
+ else if(fixed){const rid=crypto.randomUUID?crypto.randomUUID():String(Date.now());recurring.push({id:rid,name,amount:total,start:due,category});saveRecurring();ensureRecurringYear(Number(due.slice(0,4)));}
+ else{const cents=Math.round(total*100),base=Math.floor(cents/parts),rem=cents-base*parts,start=dateObj(due);
+ for(let i=0;i<parts;i++){const d=new Date(start.getFullYear(),start.getMonth()+i,start.getDate());const ds=dateStr(d);bills.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+i),groupId:Date.now()+'-'+Math.random(),name,amount:(base+(i===parts-1?rem:0))/100,due:ds,year:d.getFullYear(),monthIndex:d.getMonth(),category,paid:false,part:i+1,partCount:parts})}}
+ save();const dd=dateObj(due);selectedYear=dd.getFullYear();selectedMonth=dd.getMonth();close();render()};
+
+function downloadBlob(blob,filename){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function makeBackupObject(){return {app:'Minhas Despesas',version:4,exportedAt:new Date().toISOString(),bills,recurring}}
+function downloadBackup(){downloadBlob(new Blob([JSON.stringify(makeBackupObject(),null,2)],{type:'application/json'}),'backup-minhas-despesas-'+dateStr(new Date())+'.json')}
+function openData(){ $('dataOverlay').classList.add('show') }
+function closeData(){ $('dataOverlay').classList.remove('show') }
+$('closeData').onclick=closeData;$('doneData').onclick=closeData;
+$('dataOverlay').onclick=e=>{if(e.target===$('dataOverlay'))closeData()};
+$('makeBackup').onclick=downloadBackup;
+$('exportCsv').onclick=()=>{
+ const rows=[['Nome','Valor','Vencimento','Ano','Mês','Categoria','Pago','Parcela','Total de parcelas','Conta fixa']];
+ bills.slice().sort((a,b)=>a.due.localeCompare(b.due)).forEach(b=>rows.push([b.name,Number(b.amount).toFixed(2).replace('.',','),b.due,b.year,Number(b.monthIndex)+1,b.category,b.paid?'Sim':'Não',b.part||1,b.partCount||1,b.fixed?'Sim':'Não']));
+ const csv='\uFEFF'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'despesas-minhas-despesas-'+dateStr(new Date())+'.csv');
+};
+$('restoreBackup').onclick=async()=>{
+ const file=$('backupFile').files[0];if(!file){alert('Selecione primeiro um arquivo JSON de backup.');return}
+ let data;try{data=JSON.parse(await file.text())}catch(e){alert('Não foi possível ler o arquivo. Verifique se é um JSON válido.');return}
+ if(!data||data.app!=='Minhas Despesas'||!Array.isArray(data.bills)||!Array.isArray(data.recurring)){alert('Este arquivo não parece ser um backup válido do Minhas Despesas.');return}
+ const validBills=data.bills.every(b=>b&&typeof b==='object'&&b.id!==undefined&&typeof b.name==='string'&&Number.isFinite(Number(b.amount))&&b.due);
+ const validRecurring=data.recurring.every(r=>r&&typeof r==='object'&&r.id!==undefined&&typeof r.name==='string'&&Number.isFinite(Number(r.amount))&&r.start);
+ if(!validBills||!validRecurring){alert('O backup contém registros incompletos ou inválidos. Nenhum dado foi alterado.');return}
+ // Preserve a safety copy before either replacement or merge.
+ downloadBackup();
+ if($('importMode').value==='replace'){
+  if(!confirm('Isso substituirá todas as despesas e contas fixas deste aparelho. Um backup de segurança acabou de ser baixado. Deseja continuar?'))return;
+  bills=data.bills;recurring=data.recurring;
+ }else{
+  const billIds=new Set(bills.map(b=>String(b.id))),recIds=new Set(recurring.map(r=>String(r.id)));
+  let addedB=0,addedR=0;
+  data.recurring.forEach(r=>{if(!recIds.has(String(r.id))){recurring.push(r);recIds.add(String(r.id));addedR++}});
+  data.bills.forEach(b=>{if(!billIds.has(String(b.id))){bills.push(b);billIds.add(String(b.id));addedB++}});
+  alert('Importação concluída. Novos lançamentos: '+addedB+'. Novas contas fixas: '+addedR+'. Registros com ID repetido foram ignorados.');
+ }
+ save();saveRecurring();render();$('backupFile').value='';closeData();
+ if($('importMode').value==='replace')alert('Backup restaurado com sucesso.');
+};
+
+
+function showMenuTab(tab){
+ const annual=tab==='year';
+ $('yearPanel').hidden=!annual;$('dataPanel').hidden=annual;
+ $('tabYear').classList.toggle('active',annual);$('tabData').classList.toggle('active',!annual);
+ if(annual)render();
+}
+$('tabYear').onclick=()=>showMenuTab('year');$('tabData').onclick=()=>showMenuTab('data');
+function openMenu(){ showMenuTab('year');$('menuOverlay').classList.add('show'); render(); }
+function closeMenu(){ $('menuOverlay').classList.remove('show'); }
+$('menuBtn').addEventListener('click',openMenu);
+$('closeMenu').addEventListener('click',closeMenu);
+$('doneMenu').addEventListener('click',closeMenu);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();closeData();close();}});
+$('menuOverlay').onclick=e=>{if(e.target===$('menuOverlay'))closeMenu()};
+$('openDataFromMenu').onclick=()=>{closeMenu();openData()};
+function drawYearChart(){
+ const host=$('yearChart');if(!host)return;host.innerHTML='';
+ const vals=monthNames.map((_,i)=>bills.filter(b=>Number(b.year)===selectedYear&&Number(b.monthIndex)===i).reduce((s,b)=>s+Number(b.amount),0));
+ const max=Math.max(1,...vals);
+ vals.forEach((v,i)=>{
+  const wrap=document.createElement('div');wrap.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:end;gap:5px;min-width:0;height:135px';
+  const amount=document.createElement('span');amount.textContent=v?money(v).replace('R$','').trim():'';amount.style.cssText='font-size:9px;color:#52677e;white-space:nowrap;max-width:100%;overflow:hidden';
+  const bar=document.createElement('div');bar.style.cssText='width: min(22px,80%);height:'+Math.max(3,Math.round(v/max*88))+'px;background:#367fca;border-radius:6px 6px 2px 2px';
+  const label=document.createElement('span');label.textContent=monthNames[i].slice(0,3);label.style.cssText='font-size:9px;color:#52677e;text-transform:capitalize';
+  wrap.append(amount,bar,label);host.append(wrap);
+ });
+}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+// Seleciona o mês real do calendário automaticamente quando houver virada de mês.
+let observedMonth=new Date().getMonth(), observedYear=new Date().getFullYear();
+function syncCurrentMonth(){
+ const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+ if(m!==observedMonth||y!==observedYear){
+  observedMonth=m;observedYear=y;selectedMonth=m;selectedYear=y;render();
+ }
+}
+window.addEventListener('focus',syncCurrentMonth);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncCurrentMonth()});
+setInterval(syncCurrentMonth,60000);
+</script>
+</body></html>
