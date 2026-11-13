@@ -1,0 +1,13 @@
+MINHAS DESPESAS — AJUSTE DO TOTAL EM ABERTO
+
+Nesta versão, os cartões “Em aberto no mês” mostram somente o valor em aberto do mês selecionado no calendário.
+Os totais anuais e os demais indicadores permanecem com o comportamento anterior.
+
+Como atualizar no GitHub:
+1. Faça backup dos seus dados pelo Menu > Importar e Backup antes de atualizar.
+2. Extraia este ZIP.
+3. Envie os arquivos e pastas que estão dentro de minhas_despesas_atualizado para a raiz do repositório GitHub, substituindo os arquivos existentes.
+4. Não apague nem altere os dados salvos no navegador. A atualização do site não deve apagar o localStorage.
+5. Recarregue o aplicativo. Se continuar aparecendo a versão antiga, feche e abra novamente ou limpe os dados em cache do site (não os dados do aplicativo).
+
+Seus lançamentos existentes permanecem no armazenamento local do navegador deste aparelho.
